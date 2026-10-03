@@ -1,0 +1,26 @@
+version: "3.8"
+
+# Uso opcional: si no quieres instalar PostgreSQL directamente en WSL,
+# levanta solo la base de datos con Docker y deja backend/frontend
+# corriendo con Node normalmente (npm run dev).
+#
+#   docker compose up -d
+#   (el esquema se importa automáticamente en el primer arranque)
+#
+services:
+  postgres:
+    image: postgres:16
+    container_name: ecommerce_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tu_password_postgres
+      POSTGRES_DB: ecommerce_spotify_ui
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+volumes:
+  postgres_data:
